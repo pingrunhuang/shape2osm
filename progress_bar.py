@@ -22,12 +22,12 @@ class ProgressBar:
     def animate(self):
         for i in range(self.duration):
             if sys.platform.lower().startswith('win'):
-                print self, '\r',
+                print(self, '\r',)
             else:
-                print self, chr(27) + '[A'
+                print(self, chr(27) + '[A')
             self.update_time(i + 1)
             time.sleep(1) 
-        print self
+        print(self)
         
     def update_time(self, elapsed_secs):
         self.__update_amount((elapsed_secs / float(self.duration)) * 100.0)
@@ -41,8 +41,7 @@ class ProgressBar:
         self.prog_bar = '[' + self.fill_char * num_hashes + ' ' * (all_full - num_hashes) + ']'
         pct_place = (len(self.prog_bar) / 2) - len(str(percent_done))
         pct_string = '%d%%' % percent_done
-        self.prog_bar = self.prog_bar[0:pct_place] + \
-            (pct_string + self.prog_bar[pct_place + len(pct_string):])
+        self.prog_bar = self.prog_bar[0:pct_place] + (pct_string + self.prog_bar[pct_place + len(pct_string):])
         
     def __str__(self):
         return str(self.prog_bar)
@@ -58,8 +57,8 @@ if __name__ == '__main__':
 
     p = ProgressBar(60)
     p.update_time(15)
-    print 'static progress bar:'
-    print p
+    print('static progress bar:')
+    print(p)
     
     
     # print a static progress bar
@@ -68,8 +67,8 @@ if __name__ == '__main__':
     p = ProgressBar(30)
     p.fill_char = '='
     p.update_time(25)
-    print 'static progress bar:'
-    print p
+    print('static progress bar:')
+    print(p)
     
     
     # print a dynamic updating progress bar on one line:
@@ -79,15 +78,15 @@ if __name__ == '__main__':
     
     secs = 10
     p = ProgressBar(secs)
-    print 'dynamic updating progress bar:'
-    print 'please wait %d seconds...' % secs
+    print('dynamic updating progress bar:')
+    print('please wait %d seconds...' % secs)
     
     # spawn asych (threads/processes/etc) code here that runs for secs.
     # the call to .animate() blocks the main thread.
     
     p.animate()
     
-    print 'done'
+    print('done')
 
 
 """

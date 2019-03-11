@@ -51,8 +51,9 @@ __version__ = 0.2
 
 import shapefile
 import argparse
-from progress_bar import ProgressBar
-from elementtree.SimpleXMLWriter import XMLWriter
+# from progress_bar import ProgressBar
+# from elementtree.SimpleXMLWriter import XMLWriter
+from xml.etree import ElementTree
 from datetime import datetime
 
 API_VERSION = "0.6"
@@ -67,23 +68,21 @@ osm_id = 0
 dt = datetime.now()
 
 sf = shapefile.Reader(args.INFILE)
-f = sf.fields
-l = len(sf.shapes())
-if not args.quiet:
-    p = ProgressBar(l) 
+fields = sf.fields
+num_shapes = len(sf.shapes())
 
-w = XMLWriter(args.OUTFILE)
-w.start("osm", {"generator": "shape2osm " + str(__version__), "version": API_VERSION, "upload": "false"})
+root = ElementTree.Element("osm", {"generator": "shape2osm " + str(__version__), "version": API_VERSION, "upload": "false"})
+
 for shape in sf.shapeRecords():
     osm_id -= 1
-    (x,y) = shape.shape.points[0]
-    w.start("node", {"id": str(osm_id), "timestamp": dt.isoformat(), "version": "1", "visible": "true", "lon": str(x), "lat": str(y)})
-    for i in range(1,len(f)):
-        w.element("tag", "", {"k": str(f[i][0]), "v": str(shape.record[i-1])})
-    w.end()
-    if not args.quiet:
-        p.update_time(l - (l + osm_id))
-        print "{0}\r".format(p),
-w.end()
-if not args.quiet:
-    print "\nfinished."
+    print(shape.shape.points)
+    # (x,y) = shape.shape.points[0]
+#     node = ElementTree.SubElement(root, "node", {"id": str(osm_id), "timestamp": dt.isoformat(), "version": "1", "visible": "true", "lon": str(x), "lat": str(y)})
+#     for i in range(1,len(fields)):
+#         tag = ElementTree.SubElement(node, "tag", "", {"k": str(fields[i][0]), "v": str(shape.record[i-1])})
+
+# with open(args.OUTFILE) as f:
+#     f.write(ElementTree.tostring(root))
+
+# if not args.quiet:
+#     print("\nfinished.")
